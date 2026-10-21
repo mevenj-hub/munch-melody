@@ -1,4 +1,4 @@
-// --- Munch Melody Synthesizer & Visualizer Engine v1.3 ---
+// --- Munch Melody Synthesizer & Visualizer Engine v1.4 ---
 
 document.addEventListener('DOMContentLoaded', () => {
     const keyboardEl = document.getElementById('pianoKeyboard');
@@ -26,42 +26,43 @@ document.addEventListener('DOMContentLoaded', () => {
     let songProgress = 0;
     let audioCtx = null;
 
-    // Master note frequency lookup table (C3 to C6)
-    const masterNotes = {
-        'C3': { midi: 48, freq: 130.81, type: 'white' },
-        'C#3': { midi: 49, freq: 138.59, type: 'black' },
-        'D3': { midi: 50, freq: 146.83, type: 'white' },
-        'D#3': { midi: 51, freq: 155.56, type: 'black' },
-        'E3': { midi: 52, freq: 164.81, type: 'white' },
-        'F3': { midi: 53, freq: 174.61, type: 'white' },
-        'F#3': { midi: 54, freq: 185.00, type: 'black' },
-        'G3': { midi: 55, freq: 196.00, type: 'white' },
-        'G#3': { midi: 56, freq: 207.65, type: 'black' },
-        'A3': { midi: 57, freq: 220.00, type: 'white' },
-        'A#3': { midi: 58, freq: 233.08, type: 'black' },
-        'B3': { midi: 59, freq: 246.94, type: 'white' },
-        'C4': { midi: 60, freq: 261.63, type: 'white' },
-        'C#4': { midi: 61, freq: 277.18, type: 'black' },
-        'D4': { midi: 62, freq: 293.66, type: 'white' },
-        'D#4': { midi: 63, freq: 311.13, type: 'black' },
-        'E4': { midi: 64, freq: 329.63, type: 'white' },
-        'F4': { midi: 65, freq: 349.23, type: 'white' },
-        'F#4': { midi: 66, freq: 369.99, type: 'black' },
-        'G4': { midi: 67, freq: 392.00, type: 'white' },
-        'G#4': { midi: 68, freq: 415.30, type: 'black' },
-        'A4': { midi: 69, freq: 440.00, type: 'white' },
-        'A#4': { midi: 70, freq: 466.16, type: 'black' },
-        'B4': { midi: 71, freq: 493.88, type: 'white' },
-        'C5': { midi: 72, freq: 523.25, type: 'white' },
-        'C#5': { midi: 73, freq: 554.37, type: 'black' },
-        'D5': { midi: 74, freq: 587.33, type: 'white' },
-        'D#5': { midi: 75, freq: 622.25, type: 'black' },
-        'E5': { midi: 76, freq: 659.25, type: 'white' },
-        'F5': { midi: 77, freq: 698.46, type: 'white' },
-        'G5': { midi: 79, freq: 783.99, type: 'white' }
-    };
+    // Full 3-Octave Master Note Spectrum (C3 to C6)
+    const masterNotes = [
+        { note: 'C3', freq: 130.81, type: 'white' },
+        { note: 'C#3', freq: 138.59, type: 'black' },
+        { note: 'D3', freq: 146.83, type: 'white' },
+        { note: 'D#3', freq: 155.56, type: 'black' },
+        { note: 'E3', freq: 164.81, type: 'white' },
+        { note: 'F3', freq: 174.61, type: 'white' },
+        { note: 'F#3', freq: 185.00, type: 'black' },
+        { note: 'G3', freq: 196.00, type: 'white' },
+        { note: 'G#3', freq: 207.65, type: 'black' },
+        { note: 'A3', freq: 220.00, type: 'white' },
+        { note: 'A#3', freq: 233.08, type: 'black' },
+        { note: 'B3', freq: 246.94, type: 'white' },
+        { note: 'C4', freq: 261.63, type: 'white' },
+        { note: 'C#4', freq: 277.18, type: 'black' },
+        { note: 'D4', freq: 293.66, type: 'white' },
+        { note: 'D#4', freq: 311.13, type: 'black' },
+        { note: 'E4', freq: 329.63, type: 'white' },
+        { note: 'F4', freq: 349.23, type: 'white' },
+        { note: 'F#4', freq: 369.99, type: 'black' },
+        { note: 'G4', freq: 392.00, type: 'white' },
+        { note: 'G#4', freq: 415.30, type: 'black' },
+        { note: 'A4', freq: 440.00, type: 'white' },
+        { note: 'A#4', freq: 466.16, type: 'black' },
+        { note: 'B4', freq: 493.88, type: 'white' },
+        { note: 'C5', freq: 523.25, type: 'white' },
+        { note: 'C#5', freq: 554.37, type: 'black' },
+        { note: 'D5', freq: 587.33, type: 'white' },
+        { note: 'D#5', freq: 622.25, type: 'black' },
+        { note: 'E5', freq: 659.25, type: 'white' },
+        { note: 'F5', freq: 698.46, type: 'white' },
+        { note: 'F#5', freq: 739.99, type: 'black' },
+        { note: 'G5', freq: 783.99, type: 'white' }
+    ];
 
-    // Preset Songs Database with Multi-Difficulty Arrangements
+    // Preset Songs Database
     const songs = {
         fairouz: {
             title: "Fairouz - قديش كان في ناس (Qadish Kan Fi Nas)",
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     { time: 1.0, note: 'C4', duration: 0.8 },
                     { time: 3.0, note: 'E4', duration: 1.2 },
                     { time: 5.5, note: 'G4', duration: 0.8 },
-                    { time: 8.5, note: 'C4', duration: 1.5 },
+                    { time: 8.5, note: 'C5', duration: 1.5 },
                 ],
                 medium: [
                     { time: 1.0, note: 'C4', duration: 0.8 },
@@ -92,16 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     { time: 2.5, note: 'F4', duration: 0.4 },
                     { time: 3.0, note: 'G4', duration: 1.2 },
                     { time: 4.0, note: 'G3', duration: 1.5 },
-                    { time: 4.5, note: 'F4', duration: 0.8 },
                     { time: 5.5, note: 'E4', duration: 0.8 },
                     { time: 6.5, note: 'D4', duration: 1.5 },
-                    { time: 7.5, note: 'G3', duration: 1.0 },
                     { time: 8.5, note: 'C4', duration: 1.0 },
-                    { time: 10.0, note: 'G4', duration: 0.8 },
-                    { time: 10.5, note: 'B4', duration: 0.5 },
-                    { time: 11.0, note: 'A4', duration: 0.8 },
-                    { time: 12.0, note: 'G4', duration: 1.5 },
-                    { time: 13.0, note: 'C5', duration: 1.5 }
+                    { time: 10.0, note: 'C5', duration: 1.2 }
                 ]
             }
         },
@@ -131,17 +126,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     { time: 1.0, note: 'E5', duration: 0.5 },
                     { time: 1.5, note: 'D#5', duration: 0.5 },
                     { time: 2.0, note: 'E5', duration: 0.5 },
-                    { time: 2.5, note: 'D#5', duration: 0.5 },
-                    { time: 3.0, note: 'E5', duration: 0.5 },
                     { time: 3.2, note: 'C3', duration: 1.5 },
                     { time: 3.5, note: 'B4', duration: 0.5 },
                     { time: 4.0, note: 'D5', duration: 0.5 },
-                    { time: 4.5, note: 'C5', duration: 0.5 },
                     { time: 5.0, note: 'E3', duration: 1.5 },
                     { time: 5.2, note: 'A4', duration: 1.2 },
-                    { time: 6.0, note: 'C4', duration: 0.5 },
-                    { time: 6.5, note: 'E4', duration: 0.5 },
-                    { time: 7.0, note: 'A4', duration: 0.5 },
                     { time: 7.5, note: 'B4', duration: 1.0 }
                 ]
             }
@@ -161,25 +150,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     { time: 4.0, note: 'A3', duration: 1.0 },
                     { time: 5.5, note: 'G3', duration: 1.0 },
                     { time: 7.0, note: 'F3', duration: 1.0 },
-                    { time: 8.5, note: 'G3', duration: 1.0 },
                     { time: 10.0, note: 'A3', duration: 1.5 },
                 ],
                 hard: [
                     { time: 0.5, note: 'D3', duration: 2.0 },
                     { time: 1.0, note: 'D4', duration: 1.0 },
                     { time: 1.5, note: 'F#4', duration: 0.5 },
-                    { time: 2.0, note: 'A4', duration: 0.5 },
                     { time: 2.5, note: 'B3', duration: 1.0 },
-                    { time: 3.0, note: 'D4', duration: 0.5 },
-                    { time: 3.5, note: 'F#4', duration: 0.5 },
                     { time: 4.0, note: 'A3', duration: 1.0 },
-                    { time: 4.5, note: 'C#4', duration: 0.5 },
-                    { time: 5.0, note: 'E4', duration: 0.5 },
                     { time: 5.5, note: 'G3', duration: 1.0 },
-                    { time: 6.0, note: 'B3', duration: 0.5 },
-                    { time: 6.5, note: 'D4', duration: 0.5 },
                     { time: 7.0, note: 'F3', duration: 1.0 },
-                    { time: 8.5, note: 'G3', duration: 1.0 },
                     { time: 10.0, note: 'A3', duration: 1.5 }
                 ]
             }
@@ -190,52 +170,41 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeSong = songs[activeSongKey];
     let keyElements = {};
 
-    // Get current active notes based on difficulty
     function getActiveNotes() {
         return activeSong.arrangements[currentDifficulty] || activeSong.arrangements['medium'];
     }
 
-    // Build Keyboard Dynamically based on the current difficulty arrangement
+    // Perfectly Aligned Keyboard Builder
     function initKeyboardForSong() {
         keyboardEl.innerHTML = '';
         keyElements = {};
 
-        const currentNotes = getActiveNotes();
-        const songNoteNames = [...new Set(currentNotes.map(n => n.note))];
-        
-        const keysToRender = Object.keys(masterNotes);
-        let whiteKeyIndex = 0;
-        let lastBlackOffset = 0;
+        let whiteKeyCount = 0;
+        let lastWhiteLeft = 0;
 
-        keysToRender.forEach(noteName => {
-            const k = masterNotes[noteName];
+        masterNotes.forEach((k) => {
             const keyDiv = document.createElement('div');
             keyDiv.className = `piano-key ${k.type === 'white' ? 'white-key' : 'black-key'}`;
-            
-            if (k.type === 'white') {
-                keyDiv.style.left = `${whiteKeyIndex * 38}px`;
-                lastBlackOffset = whiteKeyIndex * 38;
-                whiteKeyIndex++;
-            } else {
-                keyDiv.style.left = `${lastBlackOffset - 12}px`;
-            }
-
-            keyDiv.dataset.note = noteName;
+            keyDiv.dataset.note = k.note;
             keyDiv.dataset.freq = k.freq;
 
-            if (songNoteNames.includes(noteName)) {
-                keyDiv.classList.add('song-active-key');
+            if (k.type === 'white') {
+                lastWhiteLeft = whiteKeyCount * 40;
+                keyDiv.style.left = `${lastWhiteLeft}px`;
+                whiteKeyCount++;
+            } else {
+                // Position black key perfectly centered over the gap between white keys
+                keyDiv.style.left = `${lastWhiteLeft + 26}px`;
             }
 
             keyDiv.addEventListener('mousedown', () => playNote(k.freq, keyDiv));
             keyboardEl.appendChild(keyDiv);
-            keyElements[noteName] = keyDiv;
+            keyElements[k.note] = keyDiv;
         });
 
-        keyboardEl.style.width = `${whiteKeyIndex * 38}px`;
+        keyboardEl.style.width = `${whiteKeyCount * 40}px`;
     }
 
-    // Web Audio Synthesizer
     function initAudio() {
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -253,7 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
         gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
 
@@ -275,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.addEventListener('resize', resizeCanvas);
 
-    // Render Falling Notes Waterfall
+    // Falling Notes Waterfall
     function drawVisualizer() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -283,19 +251,18 @@ document.addEventListener('DOMContentLoaded', () => {
             songProgress += 0.03 * playbackSpeed;
         }
 
-        const pianoWidth = keyboardEl.clientWidth;
-        const startX = (canvas.width - pianoWidth) / 2;
         const currentNotes = getActiveNotes();
+        const keyboardRect = keyboardEl.getBoundingClientRect();
 
         currentNotes.forEach(item => {
             const timeDiff = item.time - songProgress;
-            const keyboardY = canvas.height - 20;
+            const keyboardY = canvas.height - 25;
             const speed = 70;
             const noteY = keyboardY - (item.time - songProgress) * speed;
 
             const keyEl = keyElements[item.note];
             if (keyEl) {
-                const keyLeft = startX + keyEl.offsetLeft;
+                const keyLeft = keyEl.offsetLeft;
                 const keyWidth = keyEl.offsetWidth;
 
                 if (noteY > -50 && noteY < keyboardY) {
@@ -368,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // YouTube Link Conversion Simulation
+    // YouTube Link Note Conversion Simulation
     loadBtn.addEventListener('click', () => {
         const url = ytUrlInput.value.trim();
         if (!url) {
@@ -386,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     easy: [
                         { time: 1.0, note: 'C4', duration: 0.8 },
                         { time: 3.0, note: 'E4', duration: 1.0 },
-                        { time: 6.0, note: 'G4', duration: 1.2 }
+                        { time: 5.5, note: 'G4', duration: 1.2 }
                     ],
                     medium: [
                         { time: 1.0, note: 'C4', duration: 0.8 },
@@ -402,13 +369,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         { time: 1.0, note: 'C4', duration: 0.8 },
                         { time: 1.5, note: 'D4', duration: 0.5 },
                         { time: 2.0, note: 'E4', duration: 0.8 },
-                        { time: 2.5, note: 'F4', duration: 0.5 },
+                        { time: 2.5, note: 'F#4', duration: 0.5 },
                         { time: 3.0, note: 'G4', duration: 1.0 },
                         { time: 4.5, note: 'A4', duration: 0.8 },
                         { time: 6.0, note: 'C5', duration: 1.2 },
                         { time: 7.0, note: 'D5', duration: 0.5 },
                         { time: 8.0, note: 'B4', duration: 0.8 },
-                        { time: 9.5, note: 'G4', duration: 1.5 }
+                        { time: 9.5, note: 'G5', duration: 1.5 }
                     ]
                 }
             };
@@ -441,7 +408,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             songInfoEl.textContent = `Ready to play • ${currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)} difficulty • ${playbackSpeed}x Speed`;
             
-            // Re-render keyboard and notes for the selected difficulty level
             initKeyboardForSong();
             songProgress = 0;
             isPlaying = false;
