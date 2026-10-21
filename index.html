@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Munch Melody | YouTube Piano Tutorials & Falling Notes</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            500: '#10b981',
+                            600: '#059669',
+                            900: '#1d3f3e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="border-b border-slate-800 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-yellow-400 to-rose-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent">Munch Melody</h1>
+                    <p class="text-xs text-slate-400">YouTube to Interactive Piano Tutorial</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span class="px-3 py-1 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">v1.0 Live</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-8 flex flex-col gap-8">
+
+        <!-- Input & Control Dashboard -->
+        <section class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+            <h2 class="text-lg font-semibold mb-4 text-slate-200 flex items-center gap-2">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Load YouTube Tutorial & Configure Difficulty
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                <!-- YouTube Link Input -->
+                <div class="lg:col-span-6 flex flex-col gap-2">
+                    <label class="text-xs font-medium text-slate-400">YouTube Video Link</label>
+                    <div class="flex gap-2">
+                        <input type="url" id="ytUrlInput" placeholder="https://www.youtube.com/watch?v=..." 
+                            class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 transition-colors">
+                        <button id="loadBtn" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold px-6 py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20 text-sm flex items-center gap-2">
+                            <span>Convert</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Difficulty Selector -->
+                <div class="lg:col-span-4 flex flex-col gap-2">
+                    <label class="text-xs font-medium text-slate-400">Difficulty Level</label>
+                    <div class="grid grid-cols-3 gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                        <button class="difficulty-btn py-2.5 text-xs font-medium rounded-lg transition-all text-slate-400 hover:text-white" data-level="easy">Easy</button>
+                        <button class="difficulty-btn py-2.5 text-xs font-medium rounded-lg transition-all bg-emerald-500 text-slate-950 font-bold shadow" data-level="medium">Medium</button>
+                        <button class="difficulty-btn py-2.5 text-xs font-medium rounded-lg transition-all text-slate-400 hover:text-white" data-level="hard">Hard</button>
+                    </div>
+                </div>
+
+                <!-- Quick Presets -->
+                <div class="lg:col-span-2 flex flex-col gap-2">
+                    <label class="text-xs font-medium text-slate-400">Preset Tracks</label>
+                    <select id="presetSelect" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-3 text-sm text-slate-300 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                        <option value="" disabled selected>Select song...</option>
+                        <option value="fairouz">Fairouz - Qadish Kan Fi Nas</option>
+                        <option value="fur_elise">Beethoven - Für Elise</option>
+                        <option value="canon">Pachelbel - Canon in D</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Piano Visualizer & Player Stage -->
+        <section class="bg-slate-900/90 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col relative">
+            
+            <!-- Song Title & Player Controls Bar -->
+            <div class="bg-slate-950/80 px-6 py-4 border-b border-slate-800 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <span id="currentSongTitle" class="text-sm font-bold text-emerald-400">Select a preset or enter a YouTube link</span>
+                    <p id="currentSongInfo" class="text-xs text-slate-400">Ready to play • Medium difficulty</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button id="playPauseBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-5 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 shadow-lg shadow-emerald-500/20">
+                        <svg id="playIcon" class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        <span id="playBtnText">Play Tutorial</span>
+                    </button>
+                    <button id="stopBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl text-sm font-medium transition-all">Reset</button>
+                </div>
+            </div>
+
+            <!-- Falling Notes Canvas Waterfall (Synthesia Style) -->
+            <div class="relative w-full h-80 bg-slate-950 overflow-hidden border-b border-slate-800" id="canvasContainer">
+                <canvas id="fallingCanvas" class="absolute inset-0 w-full h-full"></canvas>
+                <div class="absolute top-4 left-4 pointer-events-none bg-slate-900/80 border border-slate-800 px-3 py-1.5 rounded-lg backdrop-blur text-xs text-slate-300 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Synthesia Waterfall Engine Active</span>
+                </div>
+            </div>
+
+            <!-- Interactive Piano Keyboard (2 Octaves: C3 to C5) -->
+            <div class="bg-slate-950 p-4 overflow-x-auto flex justify-center">
+                <div id="pianoKeyboard" class="piano-keyboard relative flex select-none">
+                    <!-- Keys generated dynamically via app.js -->
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        Munch Melody • Built with passion for interactive music learning 🎹
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
