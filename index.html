@@ -33,7 +33,7 @@
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-yellow-400 to-rose-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
                     <svg class="w-6 h-6 text-slate-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2Z9 10l12-3"></path>
                     </svg>
                 </div>
                 <div>
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="flex items-center space-x-3">
-                <span class="px-3 py-1 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">v1.0 Live</span>
+                <span class="px-3 py-1 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">v1.2 Live</span>
             </div>
         </div>
     </header>
@@ -56,35 +56,48 @@
                 <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
-                Load YouTube Tutorial & Configure Difficulty
+                Load YouTube Tutorial & Configure Settings
             </h2>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
                 <!-- YouTube Link Input -->
-                <div class="lg:col-span-6 flex flex-col gap-2">
+                <div class="lg:col-span-5 flex flex-col gap-2">
                     <label class="text-xs font-medium text-slate-400">YouTube Video Link</label>
                     <div class="flex gap-2">
                         <input type="url" id="ytUrlInput" placeholder="https://www.youtube.com/watch?v=..." 
                             class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 transition-colors">
-                        <button id="loadBtn" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold px-6 py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20 text-sm flex items-center gap-2">
+                        <button id="loadBtn" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-semibold px-5 py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20 text-sm flex items-center gap-2">
                             <span>Convert</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Difficulty Selector -->
-                <div class="lg:col-span-4 flex flex-col gap-2">
+                <div class="lg:col-span-3 flex flex-col gap-2">
                     <label class="text-xs font-medium text-slate-400">Difficulty Level</label>
-                    <div class="grid grid-cols-3 gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
+                    <div class="grid grid-cols-3 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
                         <button class="difficulty-btn py-2.5 text-xs font-medium rounded-lg transition-all text-slate-400 hover:text-white" data-level="easy">Easy</button>
                         <button class="difficulty-btn py-2.5 text-xs font-medium rounded-lg transition-all bg-emerald-500 text-slate-950 font-bold shadow" data-level="medium">Medium</button>
                         <button class="difficulty-btn py-2.5 text-xs font-medium rounded-lg transition-all text-slate-400 hover:text-white" data-level="hard">Hard</button>
                     </div>
                 </div>
 
+                <!-- Speed Meter -->
+                <div class="lg:col-span-2 flex flex-col gap-2">
+                    <label class="text-xs font-medium text-slate-400">Speed: <span id="speedLabel" class="text-emerald-400 font-bold">1.0x</span></label>
+                    <select id="speedSelect" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-3 text-sm text-slate-300 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                        <option value="0.25">0.25x (Slow)</option>
+                        <option value="0.5">0.5x</option>
+                        <option value="0.75">0.75x</option>
+                        <option value="1.0" selected>1.0x (Normal)</option>
+                        <option value="1.25">1.25x</option>
+                        <option value="1.5">1.5x (Fast)</option>
+                    </select>
+                </div>
+
                 <!-- Quick Presets -->
                 <div class="lg:col-span-2 flex flex-col gap-2">
-                    <label class="text-xs font-medium text-slate-400">Preset Tracks</label>
+                    <label class="text-xs font-medium text-slate-400">Preset Songs</label>
                     <select id="presetSelect" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-3 text-sm text-slate-300 focus:outline-none focus:border-emerald-500 cursor-pointer">
                         <option value="" disabled selected>Select song...</option>
                         <option value="fairouz">Fairouz - Qadish Kan Fi Nas</option>
@@ -101,8 +114,8 @@
             <!-- Song Title & Player Controls Bar -->
             <div class="bg-slate-950/80 px-6 py-4 border-b border-slate-800 flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <span id="currentSongTitle" class="text-sm font-bold text-emerald-400">Select a preset or enter a YouTube link</span>
-                    <p id="currentSongInfo" class="text-xs text-slate-400">Ready to play • Medium difficulty</p>
+                    <span id="currentSongTitle" class="text-sm font-bold text-emerald-400">Fairouz - قديش كان في ناس (Qadish Kan Fi Nas)</span>
+                    <p id="currentSongInfo" class="text-xs text-slate-400">Ready to play • Medium difficulty • 1.0x Speed</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <button id="playPauseBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-5 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 shadow-lg shadow-emerald-500/20">
@@ -116,16 +129,16 @@
             <!-- Falling Notes Canvas Waterfall (Synthesia Style) -->
             <div class="relative w-full h-80 bg-slate-950 overflow-hidden border-b border-slate-800" id="canvasContainer">
                 <canvas id="fallingCanvas" class="absolute inset-0 w-full h-full"></canvas>
-                <div class="absolute top-4 left-4 pointer-events-none bg-slate-900/80 border border-slate-800 px-3 py-1.5 rounded-lg backdrop-blur text-xs text-slate-300 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Synthesia Waterfall Engine Active</span>
+                <div id="statusOverlay" class="absolute top-4 left-4 pointer-events-none bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-lg backdrop-blur text-xs text-slate-300 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" id="statusDot"></span>
+                    <span id="statusText">Synthesia Waterfall Engine Active</span>
                 </div>
             </div>
 
-            <!-- Interactive Piano Keyboard (2 Octaves: C3 to C5) -->
+            <!-- Interactive Piano Keyboard (Dynamic Notes) -->
             <div class="bg-slate-950 p-4 overflow-x-auto flex justify-center">
                 <div id="pianoKeyboard" class="piano-keyboard relative flex select-none">
-                    <!-- Keys generated dynamically via app.js -->
+                    <!-- Keys generated dynamically based on song notes -->
                 </div>
             </div>
 
